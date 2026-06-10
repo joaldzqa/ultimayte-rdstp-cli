@@ -1,0 +1,18 @@
+﻿{
+  "ticket": "PRDTEST-XXX",
+  "flujo": "Collection Supplies",
+  "paises": ["JapÃ³n", "USA"],
+  "regla_critica": "Solo HCP/HI JapÃ³n y USA. NO Brasil, NO Venezuela, NO Gulf, NO PSC USA.",
+  "perfiles": ["HI Japan"],
+  "casos_sugeridos": [
+    "Login HCP/HI JapÃ³n o USA",
+    "Verificar mÃ³dulo Collection Supplies presente",
+    "Crear Material Order Form",
+    "Llenar cantidades",
+    "Enviar",
+    "Verificar confirmaciÃ³n",
+    "Verificar email notificaciÃ³n",
+    "Contraste con Venezuela (mÃ³dulo NO debe aparecer)"
+  ],
+  "casos": [], "bugs": []
+}

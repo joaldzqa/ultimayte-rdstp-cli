@@ -1,0 +1,16 @@
+﻿{
+  "ticket": "PRDTEST-XXX",
+  "flujo": "Flujo A - Marken directo (sin RC)",
+  "perfiles": ["HCP Venezuela", "HCP otros 95 paÃ­ses sin RC"],
+  "casos_sugeridos": [
+    "Login HCP del paÃ­s sin RC",
+    "Crear muestra y TRF",
+    "Solicitar pickup directo a Marken",
+    "Verificar Booking Form PDF",
+    "Verificar Proforma Invoice PDF",
+    "Verificar email en soportetbtb@yopmail.com",
+    "Verificar campos: Requestor, Contact, Pickup Date/Time, Location, Samples",
+    "Verificar adjuntos: Booking + Proforma + TRFs"
+  ],
+  "casos": [], "bugs": []
+}

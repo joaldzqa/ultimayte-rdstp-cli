@@ -1,0 +1,14 @@
+﻿{
+  "ticket": "PRDTEST-XXX",
+  "flujo": "Flujo USA - FedEx",
+  "perfiles": ["HCP USA Labcorp", "PSC USA"],
+  "regla_critica": "USA usa FedEx. PSC USA NO tiene Collection Supplies.",
+  "casos_sugeridos": [
+    "HCP USA crea TRF",
+    "PSC gestiona pickup FedEx",
+    "Verificar Lab recibe muestra",
+    "Verificar resultados en Connect",
+    "Verificar PSC NO ve Collection Supplies"
+  ],
+  "casos": [], "bugs": []
+}

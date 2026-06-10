@@ -1,0 +1,17 @@
+﻿{
+  "ticket": "PRDTEST-XXX",
+  "flujo": "Flujo Gulf - NBCC (NO Marken)",
+  "paises": ["Saudi", "Bahrain", "Kuwait", "OmÃ¡n", "Qatar", "EAU", "Jordania"],
+  "perfiles": ["HCP Saudi"],
+  "regla_critica": "Gulf usa NBCC (ajahlan@bloodandcancer.org). Solo TRFs. NO Booking, NO Proforma.",
+  "casos_sugeridos": [
+    "Login HCP Saudi",
+    "Crear TRF y pickup",
+    "Verificar email en ajahlan@bloodandcancer.org",
+    "VERIFICAR: Solo TRFs adjuntos",
+    "VERIFICAR: NO Booking Form",
+    "VERIFICAR: NO Proforma Invoice",
+    "Contraste con Venezuela (sÃ­ debe tener todos los docs)"
+  ],
+  "casos": [], "bugs": []
+}

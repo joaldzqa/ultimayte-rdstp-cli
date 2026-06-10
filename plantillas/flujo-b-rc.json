@@ -1,0 +1,14 @@
+﻿{
+  "ticket": "PRDTEST-XXX",
+  "flujo": "Flujo B - Con RC (Control Tower gestiona)",
+  "perfiles": ["HCP Colombia + Control Tower"],
+  "casos_sugeridos": [
+    "HCP crea TRF en App",
+    "Verificar notificaciÃ³n al RC",
+    "Login Connect como Control Tower",
+    "Verificar pickup en Connect",
+    "CT gestiona el pickup",
+    "Verificar email Marken con adjuntos completos"
+  ],
+  "casos": [], "bugs": []
+}

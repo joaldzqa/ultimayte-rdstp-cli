@@ -1,0 +1,21 @@
+﻿{
+  "ticket": "PRDTEST-17",
+  "hu": "F-004: Mover Campo Facility de Pickup a TRF",
+  "fecha": "2026-05-27",
+  "usuario": "HCP Venezuela",
+  "modulo": "App TpT",
+  "flujo": "Flujo A - Marken directo",
+  "url": "https://rdglobaldx.com/rdstp_app_prd_qa",
+  "casos": [
+    {
+      "id": "TC-01",
+      "nombre": "Campo Facility visible y obligatorio en TRF",
+      "resultado": "PASS",
+      "pasos": ["Login HCP", "Navegar Samples > New TRF", "Verificar Facility visible"],
+      "esperado": "Facility visible y obligatoria",
+      "actual": "Campo presente, validaciÃ³n activa",
+      "evidencia": "01-facility-field.png"
+    }
+  ],
+  "bugs": []
+}

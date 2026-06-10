@@ -1,0 +1,415 @@
+{
+  "ticket": "EXPLORATORIO",
+  "hu": "Revision exploratoria profunda App TpT - Modulos principales",
+  "fecha": "2026-05-28",
+  "usuario": "diego.rodriguez@tbtbglobal.com (HCP VE) / anderson.garcia.hi@yopmail.com (HI VE)",
+  "flujo": "Exploratorio multi-area: Dashboard, Samples/TRF, PDF TRF, Pickups, Perfil, HI profile",
+  "url": "https://rdglobaldx.com/rdstp_app_prd_qa",
+  "casos": [
+    {
+      "id": "EXP-01",
+      "nombre": "Dashboard - Contadores y textos (HCP Diego)",
+      "objetivo": "Verificar que los contadores del dashboard muestran los valores correctos y que los textos estan bien redactados",
+      "resultado": "FAIL",
+      "pasos": [
+        "Login como HCP Diego (diego.rodriguez@tbtbglobal.com)",
+        "Navegar al Home",
+        "Revisar los tres contadores: pending pickup, poor quality, in process",
+        "Revisar seccion 'Last available results' y 'Samples with missing information'",
+        "Revisar el mensaje de disposal en la seccion de missing information"
+      ],
+      "esperado": "Contadores correctos, textos sin errores, dias de disposal positivos",
+      "actual": "Se muestra '-260 days' (negativo) en el mensaje de urgencia de disposal: 'Your sample will be discarded in -260 days'. Ademas el contador 'Last chance: 0 days to disposal' mientras el mensaje dice -260 dias - inconsistencia.",
+      "notas": "Bug BUG-NEW-06 confirmado. Los 177 pending samples, 0 poor quality, 42 in process son numeros correctos sin bug de singular/plural en este estado.",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-06-negative-days.png"
+    },
+    {
+      "id": "EXP-02",
+      "nombre": "TRF Form - Validacion prematura de campos",
+      "objetivo": "Verificar que los campos del formulario TRF no muestran errores de validacion antes de que el usuario los haya tocado",
+      "resultado": "FAIL",
+      "pasos": [
+        "Login como HCP Diego",
+        "Ir a Samples > New Test Requisition Form",
+        "Observar el formulario recien abierto sin ninguna interaccion"
+      ],
+      "esperado": "El formulario se abre sin mensajes de error. Los errores deben aparecer solo despues de que el usuario intente enviar o toque y salga de un campo.",
+      "actual": "El formulario muestra inmediatamente mensajes 'This field is required.' en rojo en multiples campos (Patient ID, nombre, etc.) sin que el usuario haya interactuado con ellos. Esto se llama 'eager validation' o validacion prematura.",
+      "notas": "Bug nuevo. Puede confundir al usuario al pensar que algo esta mal antes de empezar a llenar el formulario.",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-01-validacion-prematura.png"
+    },
+    {
+      "id": "EXP-03",
+      "nombre": "TRF Form - Typo 'State/Providence' en lugar de 'State/Province'",
+      "objetivo": "Verificar la ortografia de las etiquetas del formulario de perfil y TRF",
+      "resultado": "FAIL",
+      "pasos": [
+        "Login como HI (anderson.garcia.hi@yopmail.com)",
+        "Ir a Profile",
+        "Revisar el campo de estado/provincia",
+        "Repetir con HCP Diego (diego.rodriguez@tbtbglobal.com)"
+      ],
+      "esperado": "El campo debe decir 'State/Province'",
+      "actual": "El campo muestra 'State/Providence*' - typo: 'Providence' en lugar de 'Province'. El error aparece tanto en el perfil de HI como en el perfil de HCP. También aparece en el placeholder: 'Select the state or providence where you work'.",
+      "notas": "Bug nuevo. Afecta perfil HI y HCP. 'Providence' es una ciudad de Rhode Island, no una traduccion de 'provincia'.",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-04-typo-providence.png"
+    },
+    {
+      "id": "EXP-04",
+      "nombre": "Pickups Form - Contador 'X samples selected' con singular/plural incorrecto",
+      "objetivo": "Verificar que el texto de muestras seleccionadas usa la forma correcta de singular/plural",
+      "resultado": "FAIL",
+      "pasos": [
+        "Login como HCP Diego",
+        "Ir a Pickups > New Pickup Request",
+        "Seleccionar exactamente 1 TRF del listado",
+        "Observar el texto que aparece en la seccion de muestras"
+      ],
+      "esperado": "Cuando se selecciona 1 muestra, el texto debe mostrar '1 sample selected' (singular)",
+      "actual": "El texto muestra '1 samples selected' - usa el plural 'samples' aunque haya solo 1 muestra seleccionada.",
+      "notas": "Bug nuevo. Problema clasico de singular/plural. Relacionado con PRDTEST-98 (que puede ser sobre 'pending tickets').",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-03-singular-plural-samples-selected.png"
+    },
+    {
+      "id": "EXP-05",
+      "nombre": "Pickups Form - Texto de descripcion roto o incorrecto",
+      "objetivo": "Verificar que el texto descriptivo del modulo Pickups este correcto",
+      "resultado": "FAIL",
+      "pasos": [
+        "Login como HCP Diego",
+        "Ir a Pickups",
+        "Observar el texto de descripcion del modulo"
+      ],
+      "esperado": "El texto de descripcion debe ser coherente y correcto",
+      "actual": "El texto de descripcion en la pagina de Pickups aparece con contenido incorrecto o roto.",
+      "notas": "Bug nuevo. Requiere verificacion mas detallada del contenido exacto.",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-02-pickups-description-text.png"
+    },
+    {
+      "id": "EXP-06",
+      "nombre": "Pickups Form - Header 'Hospital or Private Practice' estatico (PRDTEST-105)",
+      "objetivo": "Verificar que el encabezado de la seccion Facility en el formulario de pickup se actualiza dinamicamente segun el TRF seleccionado",
+      "resultado": "FAIL",
+      "pasos": [
+        "Login como HCP Diego",
+        "Ir a Pickups > New Pickup Request",
+        "Seleccionar un TRF cuya facility es 'Hospital'",
+        "Observar el titulo de la seccion Facility Information"
+      ],
+      "esperado": "El titulo debe cambiar segun el tipo de facility del TRF seleccionado ('Hospital' o 'Private Practice')",
+      "actual": "El titulo permanece como 'Hospital or Private Practice' sin importar cual TRF se seleccione. No es dinamico.",
+      "notas": "Bug conocido PRDTEST-105 - CONFIRMADO PRESENTE.",
+      "evidencia": "evidencia/exploratorio/BUG-PRDTEST-105-header-estatico.png"
+    },
+    {
+      "id": "EXP-07",
+      "nombre": "PDF TRF - Facility name muestra #N/A (PRDTEST-100)",
+      "objetivo": "Verificar que el PDF del TRF muestra el nombre correcto de la facility",
+      "resultado": "FAIL",
+      "pasos": [
+        "Login como HCP Diego",
+        "Ir a Samples > Pending TRFs",
+        "Click en 'View TRF' para un sample",
+        "Revisar el campo 'Facility name' en el encabezado del PDF"
+      ],
+      "esperado": "El campo 'Facility name' debe mostrar el nombre real de la facility del HCP",
+      "actual": "El campo muestra 'Facility name: #N/A' - el nombre de la facility no se resuelve correctamente y muestra el error de Excel '#N/A'.",
+      "notas": "Bug conocido PRDTEST-100 - CONFIRMADO PRESENTE.",
+      "evidencia": "evidencia/exploratorio/BUG-PRDTEST-100-facility-na.png"
+    },
+    {
+      "id": "EXP-08",
+      "nombre": "PDF TRF - Campo 'Address' muestra codigo de tipo de institucion",
+      "objetivo": "Verificar que el campo Address del PDF muestra la direccion correcta",
+      "resultado": "FAIL",
+      "pasos": [
+        "Login como HCP Diego",
+        "Abrir PDF de cualquier TRF",
+        "Revisar el campo 'Address' en la seccion de Facility"
+      ],
+      "esperado": "El campo 'Address' debe mostrar la direccion postal de la facility",
+      "actual": "El campo 'Address' muestra 'RPN' que parece ser un codigo de tipo de institucion en lugar de la direccion real.",
+      "notas": "Bug nuevo (posiblemente relacionado con PRDTEST-99 o PRDTEST-102). El campo Address esta tomando el valor incorrecto del backend.",
+      "evidencia": "evidencia/exploratorio/BUG-PRDTEST-100-facility-na.png"
+    },
+    {
+      "id": "EXP-09",
+      "nombre": "Perfil HI - Mensaje inconsistente sobre workplace cuando hay HCPs activos",
+      "objetivo": "Verificar que el mensaje en el perfil HI sobre workplaces es consistente con los datos mostrados",
+      "resultado": "FAIL",
+      "pasos": [
+        "Login como HI (anderson.garcia.hi@yopmail.com)",
+        "Ir a Profile",
+        "Observar la seccion de HCP list y el mensaje de workplace"
+      ],
+      "esperado": "El mensaje sobre workplaces debe ser coherente con los HCPs mostrados",
+      "actual": "El perfil HI muestra un mensaje que indica que no tiene workplace configurado, pero simultáneamente muestra una lista de HCPs asociados. Hay inconsistencia entre el mensaje y los datos mostrados.",
+      "notas": "Bug nuevo. Puede confundir al usuario sobre su estado de configuracion.",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-05-inconsistente-mensaje-hcp.png"
+    },
+    {
+      "id": "EXP-10",
+      "nombre": "HI Profile - Modulo Pickups PRESENTE (verificar regla de negocio)",
+      "objetivo": "Verificar que el HI ve el modulo Pickups (a diferencia de Brasil donde HCP no lo ve)",
+      "resultado": "PASS",
+      "pasos": [
+        "Login como HI Venezuela (anderson.garcia.hi@yopmail.com)",
+        "Verificar menu lateral"
+      ],
+      "esperado": "HI Venezuela debe ver el modulo Pickups en el menu",
+      "actual": "El menu del HI muestra: Home, Samples, Pickups, Messages. El modulo Pickups ESTA PRESENTE. Correcto.",
+      "notas": "Comportamiento correcto. Solo HCP Brasil NO ve Pickups.",
+      "evidencia": "evidencia/exploratorio/41-hi-pickups-loaded.png"
+    },
+    {
+      "id": "EXP-11",
+      "nombre": "HI vs HCP - Seccion Facility en TRF: botones de radio vs nombre de institucion",
+      "objetivo": "Verificar la diferencia en la seccion Facility entre HI y HCP en el formulario TRF",
+      "resultado": "PASS",
+      "pasos": [
+        "Login como HI, abrir New TRF, revisar seccion Facility",
+        "Login como HCP, abrir New TRF, revisar seccion Facility"
+      ],
+      "esperado": "HCP ve radio buttons (Private practice / Hospital), HI ve un campo de seleccion de institucion asociada",
+      "actual": "HI muestra 'Institution associated*' con el dropdown de instituciones. HCP muestra radio buttons 'Private practice' y 'Hospital'. Diferencia correcta.",
+      "notas": "Comportamiento correcto segun roles.",
+      "evidencia": "evidencia/exploratorio/39-hi-facility-institution-name.png"
+    },
+    {
+      "id": "EXP-12",
+      "nombre": "HI Profile - Opcion 'Forgotten Account Number' NO aparece",
+      "objetivo": "Verificar que la opcion 'Forgotten Account Number' no aparece para HI con RC (regla de negocio)",
+      "resultado": "PASS",
+      "pasos": [
+        "Login como HI (anderson.garcia.hi@yopmail.com)",
+        "Abrir New Test Requisition Form",
+        "Verificar que no hay opcion 'Forgotten Account Number' en ningun lugar del formulario"
+      ],
+      "esperado": "La opcion 'Forgotten Account Number' NO debe aparecer para HI con RC",
+      "actual": "No se encontro la opcion 'Forgotten Account Number' en el formulario TRF del HI. Correcto.",
+      "notas": "Comportamiento correcto segun regla de negocio. Tampoco aparece para HCP Diego.",
+      "evidencia": "evidencia/exploratorio/57-hi-trf-no-forgotten-acct.png"
+    },
+    {
+      "id": "EXP-13",
+      "nombre": "PRDTEST-98 - Texto 'pending tickets' plural cuando hay 1",
+      "objetivo": "Verificar si el texto 'pending tickets' usa plural incorrecto cuando hay exactamente 1",
+      "resultado": "SKIP",
+      "pasos": [
+        "Buscar la pantalla donde aparece el texto 'pending tickets'",
+        "Verificar con un usuario que tenga exactamente 1 pending ticket"
+      ],
+      "esperado": "Con 1 ticket pendiente, debe decir '1 ticket' (singular)",
+      "actual": "No se pudo localizar la pantalla especifica donde aparece el texto 'pending tickets' en la sesion actual. El modulo Messages usa 'Messages', no 'tickets'. Requiere mas investigacion o perfil especifico.",
+      "notas": "SKIP - no se pudo verificar con los perfiles disponibles en esta sesion.",
+      "evidencia": ""
+    },
+    {
+      "id": "EXP-14",
+      "nombre": "PRDTEST-99 - Account Number Labcorp vacio en PDF",
+      "objetivo": "Verificar si el campo Account Number en el PDF del TRF aparece vacio",
+      "resultado": "PASS",
+      "pasos": [
+        "Login como HCP Diego (tiene account_labcorp=12475851 en su JWT)",
+        "Abrir PDF de un TRF",
+        "Revisar el campo Account # en el PDF"
+      ],
+      "esperado": "El campo Account # debe mostrar el numero de cuenta Labcorp del HCP",
+      "actual": "El campo muestra 'Account #: 12475851'. Para el usuario Diego, el Account Number ESTA PRESENTE en el PDF. PRDTEST-99 puede estar FIJO o puede ser especifico de otro perfil.",
+      "notas": "Con el perfil Diego (account_labcorp=12475851 en JWT), el numero aparece correctamente. Verificar con un usuario sin cuenta Labcorp asignada.",
+      "evidencia": "evidencia/exploratorio/BUG-PRDTEST-100-facility-na.png"
+    },
+    {
+      "id": "EXP-15",
+      "nombre": "PRDTEST-101 - Telefono en seccion incorrecta del PDF",
+      "objetivo": "Verificar si el numero de telefono aparece en la seccion correcta del PDF TRF",
+      "resultado": "FAIL",
+      "pasos": [
+        "Abrir PDF del TRF para usuario Diego",
+        "Revisar la ubicacion del telefono de contacto en el formulario"
+      ],
+      "esperado": "El telefono de contacto debe aparecer en la seccion de informacion del medico/clinician, no en el encabezado del formulario",
+      "actual": "El numero de telefono '+1 58 | 11114711' aparece en la esquina superior derecha del encabezado del PDF (area 'Send additional copy of report to'), en lugar de estar en la seccion de datos del clinician. Ademas el codigo de pais es +1 (USA) pero el numero es venezolano.",
+      "notas": "Bug conocido PRDTEST-101 - CONFIRMADO PRESENTE. El telefono esta en posicion incorrecta en el header.",
+      "evidencia": "evidencia/exploratorio/BUG-PRDTEST-100-facility-na.png"
+    },
+    {
+      "id": "EXP-16",
+      "nombre": "PRDTEST-102 - Typo 'Addresss' en PDF",
+      "objetivo": "Verificar si existe el typo 'Addresss' (con triple s) en el PDF",
+      "resultado": "SKIP",
+      "pasos": [
+        "Abrir PDF del TRF",
+        "Buscar el campo de direccion del paciente",
+        "Verificar si dice 'Addresss' con triple s"
+      ],
+      "esperado": "El campo debe decir 'Address' (una s) o 'Patient's Address'",
+      "actual": "No se pudo verificar con certeza debido a limitaciones en el zoom del visor PDF en headless. Las capturas disponibles no son suficientemente nitidas para confirmar o descartar el typo en este campo.",
+      "notas": "SKIP - limitacion tecnica del visor PDF en modo headless. El campo 'Patient's Address' es visible pero requiere zoom mayor para leer el label.",
+      "evidencia": ""
+    },
+    {
+      "id": "EXP-17",
+      "nombre": "Dashboard - Dias negativos en mensaje de disposal (BUG-NEW-06)",
+      "objetivo": "Verificar el mensaje de urgencia de disposal para muestras con informacion faltante",
+      "resultado": "FAIL",
+      "pasos": [
+        "Login como HCP Diego",
+        "Ir a Home",
+        "Revisar la seccion 'Samples with missing information'",
+        "Leer el mensaje de 'Last chance' y 'Urgent'"
+      ],
+      "esperado": "El mensaje debe mostrar dias positivos o cero, nunca negativos. 'Last chance: X days to disposal' donde X >= 0",
+      "actual": "Muestra 'Last chance: 0 days to disposal' Y 'Your sample will be discarded in -260 days'. El valor calculado es -260 que es absurdo - indica que el calculo de dias esta usando fechas incorrectas.",
+      "notas": "Bug nuevo. El calculo de dias de disposal esta restando mal o usando la fecha incorrecta como base.",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-06-negative-days.png"
+    }
+  ],
+  "bugs": [
+    {
+      "id": "BUG-NEW-01",
+      "titulo": "TRF Form: Validacion prematura - errores 'required' al abrir el formulario",
+      "descripcion": "Al abrir el formulario 'New Test Requisition Form', se muestran inmediatamente mensajes de error 'This field is required.' en campos que el usuario aun no ha tocado. La validacion no debe activarse hasta que el usuario intente enviar o deje el campo.",
+      "pasos": [
+        "Login como cualquier HCP (ej: diego.rodriguez@tbtbglobal.com)",
+        "Ir a Samples",
+        "Hacer click en 'New Test Requisition Form'",
+        "Observar el formulario sin tocar nada"
+      ],
+      "esperado": "El formulario se abre sin mensajes de error de validacion",
+      "actual": "Los campos requeridos muestran mensajes rojos 'This field is required.' inmediatamente al abrir el formulario, antes de que el usuario haya interactuado",
+      "severidad": "Media",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-01-validacion-prematura.png"
+    },
+    {
+      "id": "BUG-NEW-02",
+      "titulo": "Pickups: Texto descriptivo del modulo incorrecto o roto",
+      "descripcion": "El texto de descripcion que aparece en la pagina principal del modulo Pickups contiene contenido incorrecto.",
+      "pasos": [
+        "Login como HCP",
+        "Ir al modulo Pickups",
+        "Revisar el texto de descripcion de la pagina"
+      ],
+      "esperado": "El texto debe describir correctamente la funcionalidad del modulo Pickups",
+      "actual": "El texto de descripcion aparece con contenido incorrecto",
+      "severidad": "Baja",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-02-pickups-description-text.png"
+    },
+    {
+      "id": "BUG-NEW-03",
+      "titulo": "Pickups Form: '1 samples selected' - error de singular/plural",
+      "descripcion": "Al seleccionar exactamente 1 TRF en el formulario de nuevo pickup, el contador muestra '1 samples selected' usando el plural incorrecto en lugar de '1 sample selected'.",
+      "pasos": [
+        "Login como HCP",
+        "Ir a Pickups > New Pickup Request",
+        "Seleccionar exactamente 1 TRF del listado",
+        "Observar el contador de muestras seleccionadas"
+      ],
+      "esperado": "'1 sample selected' (singular cuando es 1)",
+      "actual": "'1 samples selected' (plural incorrecto con valor 1)",
+      "severidad": "Baja",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-03-singular-plural-samples-selected.png"
+    },
+    {
+      "id": "BUG-NEW-04",
+      "titulo": "Perfil: Typo 'State/Providence' en lugar de 'State/Province'",
+      "descripcion": "La etiqueta del campo de estado/provincia en el perfil de usuario (tanto HCP como HI) tiene un typo: dice 'State/Providence' en lugar de 'State/Province'. 'Providence' es una ciudad de Rhode Island, USA, no el termino correcto para 'provincia'.",
+      "pasos": [
+        "Login como HI (anderson.garcia.hi@yopmail.com) O HCP (diego.rodriguez@tbtbglobal.com)",
+        "Ir a Profile",
+        "Observar la etiqueta del campo de estado/provincia"
+      ],
+      "esperado": "La etiqueta debe decir 'State/Province*'",
+      "actual": "La etiqueta dice 'State/Providence*' y el placeholder dice 'Select the state or providence where you work'",
+      "severidad": "Baja",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-04-typo-providence.png"
+    },
+    {
+      "id": "BUG-NEW-05",
+      "titulo": "HI Profile: Mensaje inconsistente sobre workplace cuando hay HCPs listados",
+      "descripcion": "El perfil del HI muestra un mensaje que indica que no tiene workplace configurado, sin embargo la misma pantalla lista HCPs asociados. Los datos visibles contradicen el mensaje mostrado.",
+      "pasos": [
+        "Login como HI (anderson.garcia.hi@yopmail.com)",
+        "Ir a Profile",
+        "Observar la seccion de HCP/workplace"
+      ],
+      "esperado": "El mensaje debe ser coherente con los datos mostrados. Si hay HCPs listados, no debe decir que no tiene workplace.",
+      "actual": "Se muestra mensaje de 'sin workplace' junto con una lista de HCPs asociados, creando una inconsistencia visual",
+      "severidad": "Media",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-05-inconsistente-mensaje-hcp.png"
+    },
+    {
+      "id": "BUG-NEW-06",
+      "titulo": "Dashboard: Mensaje de disposal muestra dias negativos ('-260 days')",
+      "descripcion": "En la seccion 'Samples with missing information' del dashboard, el mensaje de urgencia muestra un valor de dias negativo: 'Your sample will be discarded in -260 days'. El calculo de fecha de disposal esta errado.",
+      "pasos": [
+        "Login como HCP Diego (diego.rodriguez@tbtbglobal.com)",
+        "Ir a Home",
+        "Revisar la seccion 'Samples with missing information'",
+        "Leer el mensaje bajo el sample con missing info"
+      ],
+      "esperado": "El mensaje debe mostrar dias positivos o cero. Algo como 'Your sample will be discarded in X days' donde X >= 0, o indicar que ya paso el plazo.",
+      "actual": "'Last chance: 0 days to disposal' y 'Urgent! Your sample will be discarded in -260 days. Complete all missing information immediately to prevent disposal.'",
+      "severidad": "Alta",
+      "evidencia": "evidencia/exploratorio/BUG-NEW-06-negative-days.png"
+    },
+    {
+      "id": "PRDTEST-100",
+      "titulo": "[CONFIRMADO] PDF TRF: Facility name muestra '#N/A'",
+      "descripcion": "El campo 'Facility name' en el encabezado del PDF del TRF muestra '#N/A' (error de resolucion de valor tipo Excel) en lugar del nombre real de la facility del HCP.",
+      "pasos": [
+        "Login como HCP Diego",
+        "Ir a Samples > Pending TRFs",
+        "Click en 'View TRF'",
+        "Revisar el campo 'Facility name' en el encabezado del PDF"
+      ],
+      "esperado": "El nombre real de la facility (ej: 'ajhhj', 'HospitalMaroa', etc.)",
+      "actual": "'Facility name: #N/A'",
+      "severidad": "Alta",
+      "evidencia": "evidencia/exploratorio/BUG-PRDTEST-100-facility-na.png"
+    },
+    {
+      "id": "PRDTEST-105",
+      "titulo": "[CONFIRMADO] Pickups Form: Header 'Hospital or Private Practice' no cambia dinamicamente",
+      "descripcion": "En el formulario de New Pickup Request, el titulo de la seccion 'Facility Information' permanece como 'Hospital or Private Practice' sin importar que tipo de facility tenga el TRF seleccionado. Deberia actualizarse dinamicamente.",
+      "pasos": [
+        "Login como HCP Diego",
+        "Ir a Pickups > New Pickup Request",
+        "Seleccionar un TRF y asignarle una facility",
+        "Observar el header de la seccion Facility"
+      ],
+      "esperado": "El header debe mostrar el tipo especifico: 'Hospital' o 'Private Practice' segun el TRF",
+      "actual": "Siempre muestra 'Hospital or Private Practice' - no es dinamico",
+      "severidad": "Media",
+      "evidencia": "evidencia/exploratorio/BUG-PRDTEST-105-header-estatico.png"
+    },
+    {
+      "id": "BUG-PDF-01",
+      "titulo": "PDF TRF: Campo 'Address' muestra codigo de institucion 'RPN' en lugar de la direccion",
+      "descripcion": "En el encabezado del PDF del TRF, el campo 'Address' muestra 'RPN' que parece ser un codigo interno del tipo de institucion, en lugar de la direccion postal real de la facility.",
+      "pasos": [
+        "Login como HCP Diego",
+        "Abrir PDF de cualquier TRF",
+        "Revisar el campo 'Address' en la seccion de Facility (parte superior izquierda)"
+      ],
+      "esperado": "La direccion postal real de la facility del HCP",
+      "actual": "'Address: RPN' - muestra el codigo de tipo de institucion en lugar de la direccion",
+      "severidad": "Alta",
+      "evidencia": "evidencia/exploratorio/BUG-PRDTEST-100-facility-na.png"
+    },
+    {
+      "id": "PRDTEST-101",
+      "titulo": "[CONFIRMADO] PDF TRF: Telefono de contacto en posicion incorrecta (header en lugar de seccion clinician)",
+      "descripcion": "El numero de telefono de contacto del medico ('+1 58 | 11114711') aparece en la esquina superior derecha del PDF, en el area del header junto a 'Send additional copy of report to', en lugar de aparecer en la seccion de datos del Clinician/Physician.",
+      "pasos": [
+        "Login como HCP Diego",
+        "Abrir PDF de cualquier TRF",
+        "Verificar la posicion del numero de telefono de contacto"
+      ],
+      "esperado": "El telefono debe aparecer en la seccion del clinician, no en el header del documento",
+      "actual": "El telefono '+1 58 | 11114711' aparece en el area superior derecha del PDF junto al campo de fax/copy",
+      "severidad": "Alta",
+      "evidencia": "evidencia/exploratorio/BUG-PRDTEST-100-facility-na.png"
+    }
+  ]
+}

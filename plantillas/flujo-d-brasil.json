@@ -1,0 +1,16 @@
+﻿{
+  "ticket": "PRDTEST-XXX",
+  "flujo": "Flujo D - Brasil/Humania",
+  "perfiles": ["HCP Brasil + Humania"],
+  "regla_critica": "HCP Brasil NO ve mÃ³dulo Pickups. Humania gestiona desde Connect.",
+  "casos_sugeridos": [
+    "Login HCP Brasil",
+    "VERIFICAR que menÃº NO tiene Pickups (regla de negocio)",
+    "Crear muestra y TRF",
+    "Login Connect como Humania",
+    "Verificar pickup en Connect",
+    "Humania gestiona",
+    "Verificar email Marken"
+  ],
+  "casos": [], "bugs": []
+}

@@ -1,0 +1,12 @@
+﻿{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "comment": "DespuÃ©s de escribir cualquier reporte HTML, regenera el Ã­ndice",
+        "command": "powershell.exe -File .claude/hooks/post-test.ps1",
+        "filePattern": "reportes/*.html"
+      }
+    ]
+  }
+}

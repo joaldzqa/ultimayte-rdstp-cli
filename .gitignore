@@ -1,0 +1,20 @@
+﻿.env
+credentials.json
+.playwright-cli/
+.playwright/
+test-results/
+playwright-report/
+node_modules/
+package-lock.json
+.DS_Store
+Thumbs.db
+*.log
+
+# Screenshots de evidencia (pesados, no van al repo)
+evidencia/PRDTEST-*/
+evidencia/regresion/
+!evidencia/.gitkeep
+
+# Reportes HTML generados
+reportes/*.html
+!reportes/index.html
