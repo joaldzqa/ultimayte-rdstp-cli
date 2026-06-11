@@ -79,7 +79,7 @@ function bugCard(b, i) {
         <h3>${b.id ? `[${b.id}] ` : ''}${b.titulo || ''}</h3>
         <button class="copy-btn" onclick="copyJira(${i})">ðŸ“‹ Copiar Jira</button></div>
       <p class="bug-desc">${b.descripcion || b.actual || ''}</p>
-      ${b.evidencia ? `<img src="${img64(b.evidencia)}" class="thumb" onclick="openLb(this.src)">` : ''}
+      ${(Array.isArray(b.evidencia) ? b.evidencia : (b.evidencia ? [b.evidencia] : [])).map(f => { const s = img64(f); return s ? `<img src="${s}" class="thumb" onclick="openLb(this.src)">` : ''; }).join('')}
       <textarea class="jira-tpl" id="jira-${i}" style="display:none">${tpl}</textarea>
     </div>`;
 }
@@ -88,15 +88,16 @@ function casoCard(c) {
     const e = (c.resultado || '').toUpperCase();
     const cl = e === 'PASS' ? 'pass' : e === 'FAIL' ? 'fail' : 'skip';
     const ps = Array.isArray(c.pasos) ? c.pasos.map(p => `<li>${p}</li>`).join('') : '';
-    const ev = c.evidencia ? `<img src="${img64(c.evidencia)}" class="thumb" onclick="openLb(this.src)">` : '';
+    const evArr = Array.isArray(c.evidencia) ? c.evidencia : (c.evidencia ? [c.evidencia] : []);
+    const ev = evArr.map(f => { const s = img64(f); return s ? `<img src="${s}" class="thumb" onclick="openLb(this.src)" title="${f}">` : ''; }).join('');
     return `<div class="caso ${cl}" data-estado="${cl}">
       <div class="caso-h"><span class="badge ${cl}">${e === 'PASS' ? 'âœ… PASS' : e === 'FAIL' ? 'âŒ FAIL' : 'â­ SKIP'}</span>
         <h3>${c.id ? `[${c.id}] ` : ''}${c.nombre || c.titulo || ''}</h3></div>
       <div class="caso-b">
         ${c.objetivo ? `<p><strong>Objetivo:</strong> ${c.objetivo}</p>` : ''}
         ${ps ? `<details open><summary>Pasos</summary><ol>${ps}</ol></details>` : ''}
-        ${c.esperado ? `<p><strong>Esperado:</strong> ${c.esperado}</p>` : ''}
-        ${c.actual ? `<p><strong>Actual:</strong> ${c.actual}</p>` : ''}
+        ${(c.esperado || c.resultado_esperado) ? `<p><strong>Esperado:</strong> ${c.esperado || c.resultado_esperado}</p>` : ''}
+        ${(c.actual || c.resultado_actual) ? `<p><strong>Actual:</strong> ${c.actual || c.resultado_actual}</p>` : ''}
         ${c.notas ? `<div class="notas">${c.notas}</div>` : ''}
         ${ev}
       </div></div>`;
@@ -239,10 +240,19 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb()});
 function copyJira(i){const t=document.getElementById('jira-'+i).value;navigator.clipboard.writeText(t).then(()=>{const b=event.target;const o=b.innerHTML;b.innerHTML='âœ“ Copiado';b.classList.add('copied');setTimeout(()=>{b.innerHTML=o;b.classList.remove('copied')},1800)})}
 </script></body></html>`;
 
-const outDir = path.join(__dirname, 'reportes');
-if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 const fecha = datos.fecha || new Date().toISOString().slice(0, 10);
-const outFile = path.join(outDir, `reporte-${datos.ticket || 'qa'}-${fecha}.html`);
+const outDir = path.join(__dirname, 'reportes', fecha);
+if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+const outFile = path.join(outDir, `${datos.ticket || 'qa'}.html`);
 fs.writeFileSync(outFile, html, 'utf8');
 console.log(`OK ${outFile}`);
 console.log(`   ${total} casos: ${pass} PASS, ${fail} FAIL${skip ? `, ${skip} SKIP` : ''}, ${bugs} bugs`);
+
+// Regenera el indice automaticamente (reemplaza al hook post-test.ps1 que nunca funciono)
+try {
+  if (fs.existsSync(path.join(__dirname, 'gen_index.js'))) {
+    require('child_process').execSync('node gen_index.js', { cwd: __dirname, stdio: 'inherit' });
+  }
+} catch (e) {
+  console.warn(`AVISO: no se pudo regenerar el indice: ${e.message}`);
+}

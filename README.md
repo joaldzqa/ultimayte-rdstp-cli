@@ -6,20 +6,24 @@ VersiÃ³n v3 con sub-agents oficiales, slash commands, hooks y comparador visua
 ## ðŸš€ Arrancar
 
 ```bash
-cd D:\qa-prdtest
+cd c:\ultimate
+npm install        # instala @playwright/cli y deps locales
 code .
 ```
 
+En un PC nuevo, ademas: copiar `.env.example` a `.env` y llenar credenciales, y agregar las mismas variables a la seccion `env` de `~/.claude/settings.json` (ver `memory/env-credentials.md`).
+
 Dentro de Claude Code:
 ```
-/probar-hu PRDTEST-22 HCP Venezuela
+/probar-hu RDSTP-763 hcp-venezuela
 ```
 
 ## ðŸŽ¯ Slash commands
 
 | Comando | QuÃ© hace |
 |---|---|
-| `/probar-hu PRDTEST-XXX [perfil]` | Workflow completo |
+| `/probar-hu <TICKET> [perfil]` | Workflow completo |
+| `/verificar-bug <TICKET>` | Verifica si un bug ya fue corregido en QA |
 | `/crear-bug` | Crea bug Jira (tras aprobaciÃ³n) |
 | `/regresion [perfil]` | Suite de regresiÃ³n |
 | `/verificar-email [marken\|nbcc]` | Verifica yopmail |

@@ -1,5 +1,5 @@
-# Memory Index — qa-prdtest
+# Memory Index — qa-prdtest / RDSTP
 
-- [Perfil de usuario](user-profile.md) — Rol QA, preferencias de trabajo, estilo de colaboración
-- [Proyecto QA PRDTEST](project-prdtest.md) — Estado del proyecto, decisiones arquitectónicas, contexto
+- [Proyecto QA](project-prdtest.md) — Estado del proyecto, decisiones arquitectónicas, contexto
 - [Feedback de trabajo](feedback-workflow.md) — Correcciones y preferencias sobre cómo trabajar juntos
+- [Entornos y credenciales](env-credentials.md) — URLs correctas, cuentas activas vs no registradas, dónde están las credenciales Jira

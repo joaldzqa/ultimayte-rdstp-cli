@@ -7,9 +7,9 @@ metadata:
   originSessionId: 172668d7-4101-4f06-b7ef-9ea8fdb021ed
 ---
 
-**Proyecto activo:** `d:/qa-prdtest/` — este es el proyecto principal y más completo.
+**Proyecto activo:** `c:\ultimate\` (nuevo PC, migrado desde `d:/qa-prdtest/` en el PC anterior)
 
-**Why:** Evolucionó de qa-rdstp y qa-prdtest-cdp hasta tener la arquitectura correcta: agentes separados, slash commands, Jira helpers probados en producción.
+**Why:** Evolucionó de qa-rdstp y qa-prdtest-cdp hasta tener la arquitectura correcta: agentes separados, slash commands, Jira helpers probados en producción. Migrado al nuevo PC el 2026-06-10.
 
 **How to apply:** En futuras sesiones, usar este proyecto como referencia. No sugerir volver a qa-rdstp ni al enfoque code-based de qa-prdtest-cdp.
 
@@ -27,14 +27,26 @@ metadata:
 
 ---
 
-## Arquitectura del proyecto (2026-06-09)
+## Arquitectura del proyecto (2026-06-10 — nuevo PC)
 
 - 3 sub-agents: `qa-planner`, `qa-executor`, `bug-reporter`
 - 6 slash commands: `/probar-hu`, `/verificar-bug`, `/crear-bug`, `/regresion`, `/verificar-email`, `/actualizar-indice`
-- Storage state con `playwright-cli --profile=.playwright/profiles/<perfil>`
+- Storage states creados (2026-06-10): `hcp-venezuela.json`, `hi-venezuela.json`, `control-tower.json`
+- Uso: `playwright-cli -s=<sesion> state-load .playwright/profiles/<perfil>.json`
 - Jira transitions documentadas: APROBADO POR QA = 81, En espera = 41, PUBLICADO EN QA = 61
 - Helper `add-evidence-comment.js` para subir screenshots con type:file (UUID real)
 - `gen_report.js` para reportes HTML antes de cualquier acción en Jira
+- Node.js v24.15.0, Playwright CLI v1.60.0 (instalado global)
+
+## Auditoría y fixes 2026-06-11 (proyecto activo: RDSTP)
+
+- **Proyecto Jira activo es RDSTP** (tickets RDSTP-XXX); PRDTEST es el flujo GxP legado
+- Sub-agents corregidos: tenían `tools: mcp__atlassian` (nombre de server inexistente → sin acceso a Jira); ahora heredan todos los tools
+- Hook `.claude/hooks.json` tenía formato inválido (nunca corrió) → reemplazado por auto-regeneración del índice dentro de `gen_report.js`
+- Ruta de resultados unificada: `evidencia/<TICKET>/resultado.json` (qa-executor escribía en plantillas/)
+- `package.json` con `@playwright/cli` para `npm install` en PC nuevo
+- Scripts one-off de sesión van a `helpers/tmp/` (gitignored); reusables en `helpers/`
+- CLAUDE.md ahora instruye leer `memory/` del repo al inicio de sesión (la memoria del perfil de Claude NO viaja entre PCs)
 
 ## Próxima mejora pendiente (pendiente de aprobación del usuario)
 - Migrar de playwright-cli a `@playwright/mcp` (Microsoft, 2025) — usa árbol de accesibilidad, más rápido

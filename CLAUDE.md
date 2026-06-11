@@ -17,6 +17,14 @@ Eres un QA manual senior automatizado para **PRDTEST** (App TpT / TBTB Connect A
 
 ---
 
+## Memoria del proyecto (portatil entre PCs)
+
+**Al inicio de cada sesion, lee `memory/MEMORY.md` del repo** y los archivos que indexa. Esa memoria viaja con git (la memoria del perfil de Claude NO viaja entre PCs). Cuando aprendas una regla nueva o el usuario te corrija, guardala en `memory/` del repo ademas de tu memoria de perfil.
+
+**Proyecto Jira activo: RDSTP** (los tickets actuales son RDSTP-XXX). PRDTEST es el flujo GxP/Xray legado — sus reglas siguen abajo y aplican solo a tickets PRDTEST. Para bugs RDSTP: tipo Error, asignado Yohann Pardo (accountId `60ddc6cc285656006a90b20b`), descripcion en espanol con "HU relacionada", e imagenes SIEMPRE embebidas con el patron `upload-evidence.js`.
+
+---
+
 ## ðŸ”´ REGLA DE ORO â€” INVIOLABLE
 
 **NUNCA crear, mover ni modificar nada en Jira sin mi aprobaciÃ³n explÃ­cita.**
@@ -29,7 +37,8 @@ Flujo: termino prueba â†’ genero reporte â†’ te muestro preview â†�
 
 | Comando | QuÃ© hace |
 |---|---|
-| `/probar-hu PRDTEST-XXX [perfil]` | Workflow completo: lee ticket, planea, ejecuta, reporta |
+| `/probar-hu <TICKET> [perfil]` | Workflow completo: lee ticket, planea, ejecuta, reporta |
+| `/verificar-bug <TICKET>` | Verifica si un bug reportado ya fue corregido en QA |
 | `/crear-bug` | Crea bug en Jira con todas las reglas PRDTEST (tras aprobaciÃ³n) |
 | `/regresion [perfil]` | Suite de regresiÃ³n rÃ¡pida sobre el perfil indicado |
 | `/verificar-email [tipo]` | Verifica yopmail Marken o NBCC segÃºn el flujo |
@@ -91,8 +100,8 @@ Otros tipos: Error, Bug-Hypercare, Cambio, Riesgo, RNF.
 
 | MÃ³dulo | URL |
 |--------|-----|
-| App TpT | https://rdglobaldx.com/rdstp_app_prd_qa |
-| Connect AZ | https://rdglobaldx.com/rdstp_connect_prd_qa |
+| App TpT | https://rdglobaldx.com/rdstp_app_qa |
+| Connect AZ | https://rdglobaldx.com/rdstp_connect_qa |
 | Yopmail (Marken) | https://yopmail.com â†’ `soportetbtb@yopmail.com` |
 | NBCC (Gulf) | bandeja: `ajahlan@bloodandcancer.org` |
 
@@ -250,6 +259,14 @@ Cuando yo diga **"crea el bug en Jira"** (tras aprobar preview):
 | Instancia | `tbtbglobaltest.atlassian.net` |
 | cloudId | `07249f17-36d8-4633-934f-f23fd0981860` |
 | PRDTEST project ID | `10628` |
+
+### Subir imagenes de evidencia a Jira (SIEMPRE, nunca es paso manual)
+Tras crear un bug, embebe los screenshots en la DESCRIPCION con el flujo establecido:
+1. `POST /rest/api/3/issue/{key}/attachments` (multipart, `X-Atlassian-Token: no-check`)
+2. `GET /rest/api/3/attachment/content/{id}` devuelve 303 Location, extraer UUID con regex `/\/file\/([a-f0-9-]{36})\/binary/`
+3. Insertar nodo ADF `mediaSingle` con `type:"file"` + UUID en la descripcion (NUNCA `type:"external"`)
+
+Referencias: `prompt-jira-bugs-imagenes.md` (guia completa) y `upload-evidence.js` (implementacion funcional). Credenciales: `process.env.JIRA_EMAIL / JIRA_API_TOKEN / JIRA_BASE_URL`.
 
 ---
 

@@ -35,7 +35,28 @@ playwright-cli, toma de screenshots, análisis de elementos — todo va al qa-ex
 
 ---
 
-## Confirmado por el usuario (2026-06-09)
-`d:/qa-prdtest/` es el mejor proyecto de todos los intentados. No sugerir alternativas ni volver a versiones anteriores.
+## Regla: Todos los bugs RDSTP se asignan a Yohann Pardo (2026-06-11)
+accountId `60ddc6cc285656006a90b20b`. Tipo Error, descripción en español con "HU relacionada: RDSTP-XXX".
 
-**Relacionado con:** [[project-prdtest]]
+**Why:** Jose lo indicó explícitamente: "ahora todo se le reporta yohan".
+
+---
+
+## Regla: Un bug debe citar el AC literal de la HU (2026-06-11)
+Antes de reportar, verificar si el comportamiento viola un AC escrito o es inferencia. Si es inferencia, declararlo en el bug ("la HU no define restricción X") y verificar con JQL que ninguna otra HU lo especifique.
+
+**Why:** Jose cuestionó el bug del calendario ERT (RDSTP-858): el "resultado esperado" no estaba escrito en la HU. Se aceptó solo tras citar el fragmento textual del AC3 y confirmar que ninguna HU restringe fechas pasadas.
+
+---
+
+## Regla: Las imágenes SIEMPRE se suben a Jira — nunca decir que es paso manual (2026-06-11)
+Flujo establecido: attachment REST → UUID de media (303 Location) → nodo ADF mediaSingle type:"file" en la DESCRIPCIÓN. Referencias: `prompt-jira-bugs-imagenes.md` y `upload-evidence.js`. Credenciales en process.env (JIRA_EMAIL/JIRA_API_TOKEN/JIRA_BASE_URL).
+
+**Why:** El 2026-06-11 Claude dijo que adjuntar era "paso manual" y Jose lo corrigió — el mecanismo ya existía y se había usado (RDSTP-763, RDSTP-812).
+
+---
+
+## Confirmado por el usuario (2026-06-09)
+`d:/qa-prdtest/` (hoy `c:\ultimate\`) es el mejor proyecto de todos los intentados. No sugerir alternativas ni volver a versiones anteriores.
+
+**Relacionado con:** [[project-prdtest]], [[env-credentials]]

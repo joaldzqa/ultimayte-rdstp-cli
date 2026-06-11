@@ -1,0 +1,14 @@
+{
+  "name": "qa-rdstp-ultimate",
+  "private": true,
+  "description": "Proyecto QA RDSTP/PRDTEST — Playwright CLI + Jira + reportes HTML",
+  "scripts": {
+    "report": "node gen_report.js",
+    "index": "node gen_index.js",
+    "compare": "node gen_compare.js"
+  },
+  "devDependencies": {
+    "@playwright/cli": "^0.1.11",
+    "xlsx": "^0.18.5"
+  }
+}

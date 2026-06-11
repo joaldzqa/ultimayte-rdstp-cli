@@ -12,9 +12,13 @@ Thumbs.db
 
 # Screenshots de evidencia (pesados, no van al repo)
 evidencia/PRDTEST-*/
+evidencia/RDSTP-*/
 evidencia/regresion/
 !evidencia/.gitkeep
 
-# Reportes HTML generados
-reportes/*.html
+# Scripts one-off de sesion (basura temporal, no reusable)
+helpers/tmp/
+
+# Reportes HTML generados (pesados: screenshots en base64)
+reportes/**/*.html
 !reportes/index.html
